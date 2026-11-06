@@ -14,6 +14,8 @@ import DeleteConfirmModal from "../components/DeleteConfirmModal";
 
 const API_URL = "http://localhost:8080/api/employees";
 const CATE_API = "http://localhost:8080/api/departments";
+const SYSTEM_ERROR =
+  "Internal system error, please contact the administrator.";
 
 function EmployeeList() {
   const [categories, setCategories] = useState([]);
@@ -33,20 +35,33 @@ function EmployeeList() {
 
   const [message, setMessage] = useState("");
   const [variant, setVariant] = useState("success");
+  const [apiError, setApiError] = useState("");
 
   const [showDelete, setShowDelete] = useState(false);
   const [deleteData, setDeleteData] = useState(null);
+
+  // Show the message passed back from the Add New screen (MS04).
+  useEffect(() => {
+    if (location.state?.message) {
+      setMessage(location.state.message);
+      setVariant(location.state.variant || "success");
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+    // Only read the incoming navigation state once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDeleteClick = (e) => {
     setShowDelete(true);
     setDeleteData(e);
   };
+
   const fetCategories = async () => {
     try {
       const res = await axios.get(CATE_API);
       setCategories(res.data);
-    } catch (error) {
-      console.log(error);
+    } catch {
+      setApiError(SYSTEM_ERROR);
     }
   };
   useEffect(() => {
@@ -75,8 +90,9 @@ function EmployeeList() {
       setData(re.data.content || []);
       setTotalElements(re.data.totalElements || 0);
       setTotalPages(re.data.totalPages || 0);
-    } catch (error) {
-      console.error("Lỗi khi gọi API:", error);
+      setApiError("");
+    } catch {
+      setApiError(SYSTEM_ERROR);
     }
   };
   useEffect(() => {
@@ -88,34 +104,40 @@ function EmployeeList() {
     setFilterName(inputName);
     setPage(0);
   };
-  useEffect(() => {
-    fetchData();
-  }, [page]);
 
   const handleDeleteConfirm = async () => {
     try {
       await axios.delete(`${API_URL}/${deleteData.employeeId}`);
       setShowDelete(false);
-      setDeleteData([]);
-      setMessage("Delete Successful");
-      setVariant("Success");
+      setDeleteData(null);
+      setMessage("Deleted successfully.");
+      setVariant("success");
       fetchData();
-    } catch (error) {
-      console.log(error);
+    } catch {
+      setShowDelete(false);
+      setDeleteData(null);
+      setApiError(SYSTEM_ERROR);
     }
   };
 
   return (
     <Container className="mt-4">
       <h5 className="fw-bold text-start mb-5">Employee List</h5>
+
+      {apiError && (
+        <Alert variant="danger" onClose={() => setApiError("")} dismissible>
+          {apiError}
+        </Alert>
+      )}
+
       <Col md={3}>
         <Form.Group>
-          <Form.Label>Filter by Category:</Form.Label>
+          <Form.Label>Department</Form.Label>
           <Form.Select
             value={inputCategory}
             onChange={(e) => setInputCategory(e.target.value)}
           >
-            <option value="">All Categories</option>
+            <option value="">All Departments</option>
             {categories.map((item) => (
               <option key={item.departmentId} value={item.departmentId}>
                 {item.departmentName}
@@ -128,7 +150,7 @@ function EmployeeList() {
       <Row className="mb-3 align-items-end">
         <Col md={6}>
           <Form.Group>
-            <Form.Label>Search by Name:</Form.Label>
+            <Form.Label>Employee Name</Form.Label>
             <Form.Control
               type="text"
               placeholder="Enter name..."
@@ -159,7 +181,7 @@ function EmployeeList() {
             <th>#</th>
             <th>Full Name</th>
             <th>Department</th>
-            <th>Posision</th>
+            <th>Position</th>
             <th>Email</th>
             <th>Phone</th>
             <th>Action</th>
@@ -181,7 +203,8 @@ function EmployeeList() {
                   </Button>
                   |
                   <Button
-                    variant="link danger"
+                    variant="link"
+                    className="text-danger"
                     onClick={() => handleDeleteClick(item)}
                   >
                     Delete
@@ -191,7 +214,7 @@ function EmployeeList() {
             ))
           ) : (
             <tr>
-              <td colSpan="6" className="text-center">
+              <td colSpan="7" className="text-center">
                 No records found
               </td>
             </tr>
@@ -199,7 +222,7 @@ function EmployeeList() {
         </tbody>
       </Table>
 
-      {totalPages > 0 && (
+      {totalPages > 1 && (
         <div className="d-flex justify-content-between align-items-center mt-3">
           <div>
             Show {data.length} of {totalElements} records

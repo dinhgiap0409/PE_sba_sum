@@ -1,26 +1,46 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Container, Card, Row, Col } from "react-bootstrap";
+import { Container, Card, Row, Col, Alert } from "react-bootstrap";
 import axios from "axios";
 
 const API_URL = "http://localhost:8080/api/employees";
+const SYSTEM_ERROR =
+  "Internal system error, please contact the administrator.";
 
 function ViewDetails() {
   const { id } = useParams();
   const [data, setData] = useState(null);
+  const [apiError, setApiError] = useState("");
 
   useEffect(() => {
     const getDataById = async () => {
       try {
         const res = await axios.get(`${API_URL}/${id}`);
         setData(res.data);
-      } catch (error) {
-        console.log(error);
+      } catch {
+        setApiError(SYSTEM_ERROR);
       }
     };
 
     getDataById();
   }, [id]);
+
+  const formatSalary = (salary) => {
+    if (salary === null || salary === undefined || salary === "") {
+      return "";
+    }
+    return `${Number(salary).toLocaleString("vi-VN")} VND`;
+  };
+
+  if (apiError) {
+    return (
+      <Container className="mt-4">
+        <Alert variant="danger" onClose={() => setApiError("")} dismissible>
+          {apiError}
+        </Alert>
+      </Container>
+    );
+  }
 
   if (!data) {
     return <Container className="mt-4">Loading...</Container>;
@@ -32,7 +52,7 @@ function ViewDetails() {
         <Col md={10}>
           <Card className="p-3">
             <Card.Body>
-              <h3 className="fw-bold text-start mb-5">VIEW DETAILS</h3>
+              <h3 className="fw-bold text-start mb-5">Employee Details</h3>
 
               <div className="d-flex justify-content-center mb-2">
                 <span
@@ -69,7 +89,7 @@ function ViewDetails() {
                   className="fw-bold text-end me-3"
                   style={{ width: "170px" }}
                 >
-                  Posision:
+                  Position:
                 </span>
                 <span style={{ width: "170px" }}>{data.position}</span>
               </div>
@@ -99,7 +119,7 @@ function ViewDetails() {
                   className="fw-bold text-end me-3"
                   style={{ width: "170px" }}
                 >
-                  Date of birth:
+                  Date of Birth:
                 </span>
                 <span style={{ width: "170px" }}>{data.dateOfBirth}</span>
               </div>
@@ -121,7 +141,9 @@ function ViewDetails() {
                 >
                   Salary:
                 </span>
-                <span style={{ width: "170px" }}>{data.salary}</span>
+                <span style={{ width: "170px" }}>
+                  {formatSalary(data.salary)}
+                </span>
               </div>
 
               <div className="text-center mt-4">
@@ -129,7 +151,7 @@ function ViewDetails() {
                   to="/"
                   className="btn btn-secondary border border-dark px-4"
                 >
-                  Quay Lại
+                  Back
                 </Link>
               </div>
             </Card.Body>
