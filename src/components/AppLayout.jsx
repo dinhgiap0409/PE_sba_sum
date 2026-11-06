@@ -1,4 +1,4 @@
-import { Col, Container, Row } from "react-bootstrap";
+import { Container, Navbar } from "react-bootstrap";
 import { Outlet } from "react-router-dom";
 
 export default function AppLayout() {
@@ -14,24 +14,23 @@ export default function AppLayout() {
   };
 
   return (
-    <Container className="py-4">
-      <div className="border">
-        <Row className="g-0 border-bottom align-items-center">
-          <Col xs="auto" className="px-3 py-3 border-end fw-bold">
-            Logo
-          </Col>
-
-          <Col className="px-3 py-3">Employee List</Col>
-
-          <Col className="px-3 py-3 text-end">
+    <div className="d-flex flex-column min-vh-100">
+      <Navbar bg="dark" variant="dark">
+        <Container>
+          <Navbar.Brand>Employee Management System</Navbar.Brand>
+          <Navbar.Text className="text-white">
             Date: {formatDate(currentDate)}
-          </Col>
-        </Row>
+          </Navbar.Text>
+        </Container>
+      </Navbar>
 
-        <div className="p-4">
-          <Outlet />
-        </div>
-      </div>
-    </Container>
+      <Container className="py-4 flex-grow-1">
+        <Outlet />
+      </Container>
+
+      <footer className="border-top py-3 text-center text-muted">
+        © 2026 FU University
+      </footer>
+    </div>
   );
 }
