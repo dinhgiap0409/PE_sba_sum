@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Container, Card, Row, Col, Alert } from "react-bootstrap";
+import { Container, Alert } from "react-bootstrap";
 import axios from "axios";
+import { departmentPillClass } from "../utils/departmentPill";
 
 const API_URL = "http://localhost:8080/api/employees";
 const SYSTEM_ERROR =
@@ -29,7 +30,7 @@ function ViewDetails() {
     if (salary === null || salary === undefined || salary === "") {
       return "";
     }
-    return `${Number(salary).toLocaleString("vi-VN")} VND`;
+    return Number(salary).toLocaleString("en-US");
   };
 
   if (apiError) {
@@ -46,118 +47,43 @@ function ViewDetails() {
     return <Container className="mt-4">Loading...</Container>;
   }
 
+  const fields = [
+    { label: "Full Name", value: data.fullName },
+    { label: "Employee ID", value: data.employeeId },
+    {
+      label: "Department",
+      value: (
+        <span className={departmentPillClass(data.departmentName)}>
+          {data.departmentName}
+        </span>
+      ),
+    },
+    { label: "Position", value: data.position },
+    { label: "Email", value: data.email },
+    { label: "Phone", value: data.phone },
+    { label: "Date of Birth", value: data.dateOfBirth },
+    { label: "Start Date", value: data.startDate },
+    { label: "Salary (VND)", value: formatSalary(data.salary) },
+  ];
+
   return (
     <Container className="mt-4">
-      <Row className="justify-content-center">
-        <Col md={10}>
-          <Card className="p-3">
-            <Card.Body>
-              <h3 className="fw-bold text-start mb-5">Employee Details</h3>
+      <h2 className="ems-screen-title">Employee Details</h2>
 
-              <div className="d-flex justify-content-center mb-2">
-                <span
-                  className="fw-bold text-end me-3"
-                  style={{ width: "170px" }}
-                >
-                  Full Name:
-                </span>
-                <span style={{ width: "170px" }}>{data.fullName}</span>
-              </div>
+      <div>
+        {fields.map((field) => (
+          <div key={field.label} className="ems-detail-row">
+            <span className="ems-detail-label">{field.label}</span>
+            <span>{field.value}</span>
+          </div>
+        ))}
+      </div>
 
-              <div className="d-flex justify-content-center mb-2">
-                <span
-                  className="fw-bold text-end me-3"
-                  style={{ width: "170px" }}
-                >
-                  Employee ID:
-                </span>
-                <span style={{ width: "170px" }}>{data.employeeId}</span>
-              </div>
-
-              <div className="d-flex justify-content-center mb-2">
-                <span
-                  className="fw-bold text-end me-3"
-                  style={{ width: "170px" }}
-                >
-                  Department:
-                </span>
-                <span style={{ width: "170px" }}>{data.departmentName}</span>
-              </div>
-
-              <div className="d-flex justify-content-center mb-2">
-                <span
-                  className="fw-bold text-end me-3"
-                  style={{ width: "170px" }}
-                >
-                  Position:
-                </span>
-                <span style={{ width: "170px" }}>{data.position}</span>
-              </div>
-
-              <div className="d-flex justify-content-center mb-2">
-                <span
-                  className="fw-bold text-end me-3"
-                  style={{ width: "170px" }}
-                >
-                  Email:
-                </span>
-                <span style={{ width: "170px" }}>{data.email}</span>
-              </div>
-
-              <div className="d-flex justify-content-center mb-2">
-                <span
-                  className="fw-bold text-end me-3"
-                  style={{ width: "170px" }}
-                >
-                  Phone:
-                </span>
-                <span style={{ width: "170px" }}>{data.phone}</span>
-              </div>
-
-              <div className="d-flex justify-content-center mb-2">
-                <span
-                  className="fw-bold text-end me-3"
-                  style={{ width: "170px" }}
-                >
-                  Date of Birth:
-                </span>
-                <span style={{ width: "170px" }}>{data.dateOfBirth}</span>
-              </div>
-
-              <div className="d-flex justify-content-center mb-2">
-                <span
-                  className="fw-bold text-end me-3"
-                  style={{ width: "170px" }}
-                >
-                  Start Date:
-                </span>
-                <span style={{ width: "170px" }}>{data.startDate}</span>
-              </div>
-
-              <div className="d-flex justify-content-center mb-2">
-                <span
-                  className="fw-bold text-end me-3"
-                  style={{ width: "170px" }}
-                >
-                  Salary:
-                </span>
-                <span style={{ width: "170px" }}>
-                  {formatSalary(data.salary)}
-                </span>
-              </div>
-
-              <div className="text-center mt-4">
-                <Link
-                  to="/"
-                  className="btn btn-secondary border border-dark px-4"
-                >
-                  Back
-                </Link>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+      <div className="mt-3">
+        <Link to="/" className="btn btn-outline-secondary px-4">
+          &larr; Back
+        </Link>
+      </div>
     </Container>
   );
 }

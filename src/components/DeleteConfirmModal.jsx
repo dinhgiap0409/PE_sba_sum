@@ -3,22 +3,28 @@ import { Modal, Button } from "react-bootstrap";
 function DeleteConfirmModal({ show, data, onConfirm, onClose }) {
   return (
     <Modal show={show} onHide={onClose} centered>
-      <Modal.Header closeButton className="justify-content-center">
-        <Modal.Title className="w-100 text-center">Confirmation</Modal.Title>
+      <Modal.Header closeButton>
+        <Modal.Title className="ems-modal-title">
+          &#9888; Confirmation
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        Are you sure you want to delete employee "{data}"?
+        <p>
+          Are you sure you want to delete employee &ldquo;
+          <strong>{data}</strong>&rdquo;?
+        </p>
+        <p className="text-muted mb-0">This action cannot be undone.</p>
       </Modal.Body>
-      <Modal.Footer className="justify-content-center border-0 gap-4">
+      <Modal.Footer>
         <Button
-          variant="primary"
+          variant="danger"
           onClick={onConfirm}
           style={{ minWidth: "120px" }}
         >
           Yes
         </Button>
         <Button
-          variant="secondary"
+          variant="outline-secondary"
           onClick={onClose}
           style={{ minWidth: "120px" }}
         >

@@ -293,68 +293,76 @@ function AddNew() {
     }
   };
 
+  // Mandatory-field label, matching the mock-up ("Full Name *").
+  const fieldLabel = (label) => (
+    <Form.Label className="ems-form-label">
+      {label} <span className="ems-required">*</span>
+    </Form.Label>
+  );
+
+  // Validation error under a field: bold red text, like the mock-up.
+  const fieldError = (message) =>
+    message ? <div className="ems-field-error">{message}</div> : null;
+
   return (
-    <Container>
+    <Container className="mt-4">
+      <h2 className="ems-screen-title">Add New Employee</h2>
+
       {message && (
         <Alert variant={variant} onClose={() => setMessage("")} dismissible>
           {message}
         </Alert>
       )}
 
-      <Form onSubmit={handleAddNew} className="mb-4 p-3 border rounded">
-        <Row className="d-flex justify-content-center">
+      <Form onSubmit={handleAddNew} className="mb-4">
+        <Form.Group className="mb-3">
+          {fieldLabel("Full Name")}
+          <Form.Control
+            type="text"
+            name="fullName"
+            placeholder="Enter full name"
+            value={formData.fullName}
+            onChange={handleInputChange}
+          />
+          {fieldError(errors.fullName)}
+        </Form.Group>
+
+        <Row>
           <Col md={6}>
-            <h3 className="text-start mb-3">Add New</h3>
-
             <Form.Group className="mb-3">
-              <Form.Label>Full Name:</Form.Label>
-              <Form.Control
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleInputChange}
-                isInvalid={!!errors.fullName}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.fullName}
-              </Form.Control.Feedback>
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Email:</Form.Label>
+              {fieldLabel("Email")}
               <Form.Control
                 type="text"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                isInvalid={!!errors.email}
               />
-              <Form.Control.Feedback type="invalid">
-                {errors.email}
-              </Form.Control.Feedback>
+              {fieldError(errors.email)}
             </Form.Group>
+          </Col>
 
+          <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>Phone:</Form.Label>
+              {fieldLabel("Phone")}
               <Form.Control
                 type="text"
                 name="phone"
                 value={formData.phone}
                 onChange={handleInputChange}
-                isInvalid={!!errors.phone}
               />
-              <Form.Control.Feedback type="invalid">
-                {errors.phone}
-              </Form.Control.Feedback>
+              {fieldError(errors.phone)}
             </Form.Group>
+          </Col>
+        </Row>
 
+        <Row>
+          <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>Department:</Form.Label>
+              {fieldLabel("Department")}
               <Form.Select
                 name="departmentId"
                 value={formData.departmentId}
                 onChange={handleInputChange}
-                isInvalid={!!errors.departmentId}
               >
                 <option value="">Select Department</option>
                 {departments.map((item) => (
@@ -363,76 +371,74 @@ function AddNew() {
                   </option>
                 ))}
               </Form.Select>
-              <Form.Control.Feedback type="invalid">
-                {errors.departmentId}
-              </Form.Control.Feedback>
+              {fieldError(errors.departmentId)}
             </Form.Group>
+          </Col>
 
+          <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>Position:</Form.Label>
+              {fieldLabel("Position")}
               <Form.Control
                 type="text"
                 name="position"
                 value={formData.position}
                 onChange={handleInputChange}
-                isInvalid={!!errors.position}
               />
-              <Form.Control.Feedback type="invalid">
-                {errors.position}
-              </Form.Control.Feedback>
+              {fieldError(errors.position)}
             </Form.Group>
+          </Col>
+        </Row>
 
+        <Row>
+          <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>Date of Birth:</Form.Label>
+              {fieldLabel("Date of Birth")}
               <Form.Control
                 type="date"
                 name="dateOfBirth"
                 value={formData.dateOfBirth}
                 onChange={handleInputChange}
-                isInvalid={!!errors.dateOfBirth}
               />
-              <Form.Control.Feedback type="invalid">
-                {errors.dateOfBirth}
-              </Form.Control.Feedback>
+              {fieldError(errors.dateOfBirth)}
             </Form.Group>
+          </Col>
 
+          <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>Start Date:</Form.Label>
+              {fieldLabel("Start Date")}
               <Form.Control
                 type="date"
                 name="startDate"
                 value={formData.startDate}
                 onChange={handleInputChange}
-                isInvalid={!!errors.startDate}
               />
-              <Form.Control.Feedback type="invalid">
-                {errors.startDate}
-              </Form.Control.Feedback>
+              {fieldError(errors.startDate)}
             </Form.Group>
+          </Col>
+        </Row>
 
+        <Row>
+          <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>Salary:</Form.Label>
+              {fieldLabel("Salary (VND)")}
               <Form.Control
                 type="text"
                 inputMode="numeric"
                 name="salary"
                 value={formData.salary}
                 onChange={handleInputChange}
-                isInvalid={!!errors.salary}
               />
-              <Form.Control.Feedback type="invalid">
-                {errors.salary}
-              </Form.Control.Feedback>
+              {fieldError(errors.salary)}
             </Form.Group>
           </Col>
         </Row>
 
-        <div className="d-flex justify-content-center gap-4 mt-3">
-          <Button variant="secondary" type="submit">
+        <div className="d-flex gap-3 mt-3">
+          <Button variant="primary" type="submit" className="px-4">
             Save
           </Button>
 
-          <Button as={Link} to="/" variant="secondary">
+          <Button as={Link} to="/" variant="outline-secondary" className="px-4">
             Back
           </Button>
         </div>

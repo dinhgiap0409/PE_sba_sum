@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import DeleteConfirmModal from "../components/DeleteConfirmModal";
+import { departmentPillClass } from "../utils/departmentPill";
 
 const API_URL = "http://localhost:8080/api/employees";
 const CATE_API = "http://localhost:8080/api/departments";
@@ -122,7 +123,7 @@ function EmployeeList() {
 
   return (
     <Container className="mt-4">
-      <h5 className="fw-bold text-start mb-5">Employee List</h5>
+      <h2 className="ems-screen-title">Employee List</h2>
 
       {apiError && (
         <Alert variant="danger" onClose={() => setApiError("")} dismissible>
@@ -130,52 +131,57 @@ function EmployeeList() {
         </Alert>
       )}
 
-      <Col md={3}>
-        <Form.Group>
-          <Form.Label>Department</Form.Label>
-          <Form.Select
-            value={inputCategory}
-            onChange={(e) => setInputCategory(e.target.value)}
-          >
-            <option value="">All Departments</option>
-            {categories.map((item) => (
-              <option key={item.departmentId} value={item.departmentId}>
-                {item.departmentName}
-              </option>
-            ))}
-          </Form.Select>
-        </Form.Group>
-      </Col>
-
       <Row className="mb-3 align-items-end">
-        <Col md={6}>
+        <Col md={4}>
           <Form.Group>
-            <Form.Label>Employee Name</Form.Label>
+            <Form.Label className="ems-filter-label">
+              Employee Name
+            </Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter name..."
               value={inputName}
               onChange={(e) => setInputName(e.target.value)}
             />
           </Form.Group>
         </Col>
 
-        <Col md={2} className="d-flex justify-content-center gap-4 mt-3">
+        <Col md={3}>
+          <Form.Group>
+            <Form.Label className="ems-filter-label">Department</Form.Label>
+            <Form.Select
+              value={inputCategory}
+              onChange={(e) => setInputCategory(e.target.value)}
+            >
+              <option value="">-- All --</option>
+              {categories.map((item) => (
+                <option key={item.departmentId} value={item.departmentId}>
+                  {item.departmentName}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+        </Col>
+
+        <Col md="auto">
           <Button variant="primary" onClick={handleSearch}>
             Filter
           </Button>
-          <Link to="/AddNew">
-            <Button variant="primary">Add New</Button>
+        </Col>
+
+        <Col className="d-flex justify-content-end">
+          <Link to="/AddNew" className="btn btn-outline-secondary">
+            + Add New
           </Link>
         </Col>
       </Row>
       {message && (
         <Alert variant={variant} onClose={() => setMessage("")} dismissible>
+          {variant === "success" && <strong>✓ </strong>}
           {message}
         </Alert>
       )}
 
-      <Table striped bordered hover>
+      <Table striped hover className="ems-table">
         <thead>
           <tr>
             <th>#</th>
@@ -193,18 +199,24 @@ function EmployeeList() {
               <tr key={item.employeeId}>
                 <td>{page * 5 + key + 1}</td>
                 <td>{item.fullName}</td>
-                <td>{item.departmentName}</td>
+                <td>
+                  <span className={departmentPillClass(item.departmentName)}>
+                    {item.departmentName}
+                  </span>
+                </td>
                 <td>{item.position}</td>
                 <td>{item.email}</td>
                 <td>{item.phone}</td>
                 <td>
-                  <Button variant="link">
-                    <Link to={`/ViewDetails/${item.employeeId}`}>View</Link>
-                  </Button>
-                  |
+                  <Link
+                    to={`/ViewDetails/${item.employeeId}`}
+                    className="btn btn-link ems-link-view p-0 me-3"
+                  >
+                    View
+                  </Link>
                   <Button
                     variant="link"
-                    className="text-danger"
+                    className="ems-link-delete p-0"
                     onClick={() => handleDeleteClick(item)}
                   >
                     Delete
@@ -225,26 +237,22 @@ function EmployeeList() {
       {totalPages > 1 && (
         <div className="d-flex justify-content-between align-items-center mt-3">
           <div>
-            Show {data.length} of {totalElements} records
+            Page {page + 1} / {totalPages} ({totalElements} records)
           </div>
 
-          <div>
+          <div className="d-flex gap-1">
             <Button
               variant="outline-secondary"
-              size="sm"
-              className="me-2"
               onClick={() => setPage((prev) => Math.max(0, prev - 1))}
               disabled={page === 0}
             >
-              Previous
+              ‹
             </Button>
 
             {[...Array(totalPages)].map((_, i) => (
               <Button
                 key={i}
                 variant={page === i ? "primary" : "outline-secondary"}
-                size="sm"
-                className="me-1"
                 onClick={() => setPage(i)}
               >
                 {i + 1}
@@ -253,14 +261,12 @@ function EmployeeList() {
 
             <Button
               variant="outline-secondary"
-              size="sm"
-              className="ms-2"
               onClick={() =>
                 setPage((prev) => Math.min(totalPages - 1, prev + 1))
               }
               disabled={page >= totalPages - 1}
             >
-              Next
+              ›
             </Button>
           </div>
         </div>
