@@ -1,3 +1,20 @@
+/* EMS theme — colours sampled from the exam mock-ups (SBA301 EMS PE).
+   Navy #224e7f is the theme colour: navbar, table header, primary buttons.
+   No other UI library is used: this file only re-themes React-Bootstrap. */
+:root {
+  --ems-navy: #224e7f;
+  --ems-navy-dark: #1a3a5c;
+  --ems-bg: #fafbfd;
+  --ems-row: #f2f5f9;
+  --ems-text: #202f41;
+  --ems-label: #586373;
+  --ems-border: #dbe2e8;
+  --bs-primary: #224e7f;
+  --bs-primary-rgb: 34, 78, 127;
+  --bs-link-color: #224e7f;
+  --bs-link-hover-color: #1a3a5c;
+}
+
 body {
   margin: 0;
   font-family:
@@ -6,4 +23,170 @@ body {
     "Segoe UI",
     Roboto,
     sans-serif;
+  background-color: var(--ems-bg);
+  color: var(--ems-text);
+}
+
+/* Primary buttons (Filter, Save, active page) are navy, not Bootstrap blue. */
+.btn-primary {
+  --bs-btn-bg: #224e7f;
+  --bs-btn-border-color: #224e7f;
+  --bs-btn-hover-bg: #1a3a5c;
+  --bs-btn-hover-border-color: #1a3a5c;
+  --bs-btn-active-bg: #1a3a5c;
+  --bs-btn-active-border-color: #1a3a5c;
+  --bs-btn-disabled-bg: #224e7f;
+  --bs-btn-disabled-border-color: #224e7f;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #224e7f;
+  box-shadow: 0 0 0 0.25rem rgba(34, 78, 127, 0.25);
+}
+
+/* Top navigation bar: navy background, bold white title, date on the right. */
+.ems-navbar {
+  background-color: #224e7f;
+}
+
+.ems-navbar .navbar-brand {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.ems-navbar .navbar-text {
+  color: #ffffff;
+}
+
+/* Screen title: large bold navy text with a light rule underneath. */
+.ems-screen-title {
+  color: #224e7f;
+  font-weight: 700;
+  border-bottom: 1px solid var(--ems-border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Filter labels. */
+.ems-filter-label {
+  color: var(--ems-label);
+  font-weight: 700;
+}
+
+/* Employee table: navy header, alternating light rows, no vertical borders. */
+.ems-table {
+  --bs-table-striped-bg: #f2f5f9;
+  --bs-table-hover-bg: #e8eef4;
+}
+
+.ems-table thead th {
+  background-color: #224e7f;
+  color: #ffffff;
+  border-color: #224e7f;
+  font-weight: 700;
+}
+
+/* Department pill, coloured per department like the mock-up. */
+.ems-dept-pill {
+  display: inline-block;
+  padding: 0.15rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.ems-dept-it {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.ems-dept-hr {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.ems-dept-finance {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.ems-dept-marketing {
+  background-color: #ede9fe;
+  color: #6b21a8;
+}
+
+.ems-dept-sales {
+  background-color: #ccfbf1;
+  color: #0f766e;
+}
+
+.ems-dept-default {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+/* Row actions: plain navy View link and red Delete link, no separator. */
+.ems-link-view {
+  color: #224e7f;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.ems-link-view:hover {
+  color: #1a3a5c;
+  text-decoration: underline;
+}
+
+.ems-link-delete {
+  color: #dc3545;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.ems-link-delete:hover {
+  color: #b02a37;
+  text-decoration: underline;
+}
+
+/* Employee Details: full-width striped label/value rows. */
+.ems-detail-row {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+}
+
+.ems-detail-row:nth-child(even) {
+  background-color: #f2f5f9;
+}
+
+.ems-detail-label {
+  width: 220px;
+  flex-shrink: 0;
+  font-weight: 700;
+  color: var(--ems-label);
+}
+
+/* Add New form labels: bold grey with a red asterisk for mandatory fields. */
+.ems-form-label {
+  color: var(--ems-label);
+  font-weight: 700;
+}
+
+.ems-required {
+  color: #dc3545;
+}
+
+/* Validation error under a field: bold red, no red input border (per mock-up). */
+.ems-field-error {
+  color: #c81e1e;
+  font-weight: 700;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Delete confirmation modal: amber/brown title with a warning mark. */
+.ems-modal-title {
+  color: #92400e;
+  font-weight: 700;
 }

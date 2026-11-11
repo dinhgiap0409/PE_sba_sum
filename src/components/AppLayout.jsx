@@ -15,12 +15,10 @@ export default function AppLayout() {
 
   return (
     <div className="d-flex flex-column min-vh-100">
-      <Navbar bg="dark" variant="dark">
+      <Navbar className="ems-navbar">
         <Container>
           <Navbar.Brand>Employee Management System</Navbar.Brand>
-          <Navbar.Text className="text-white">
-            Date: {formatDate(currentDate)}
-          </Navbar.Text>
+          <Navbar.Text>{formatDate(currentDate)}</Navbar.Text>
         </Container>
       </Navbar>
 
